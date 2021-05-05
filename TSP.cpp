@@ -1,5 +1,10 @@
 #pragma adj_matrixCC optimize("Ofast")
-#include <bits/stdc++.h>
+#include <emscripten.h>
+#include <math.h>
+#include <stdio.h>
+#include <vector>
+#include <string>
+#include <iostream>
 using namespace std;
 
 const int MAXN = 16, INF = 1e9;
@@ -28,22 +33,28 @@ void recovery(int city, int cities_visited_mask, int val, string &answer_path){
     }
 }
 
-string find_best(vector<vector<int>> &A){
-    nodes = A.size();
-    for (int i = 0; i < nodes; ++i) for (int j = 0; j < nodes; ++j) adj_matrix[i][j] = A[i][j] == -1 ? INF : A[i][j];
-    memset(dp_table, -1, sizeof(dp_table));
-    int min_cost = INF;
-    int start = -1;
-    for (int i = 0; i < 1; ++i) {
-        if (dp(i, ((1<<nodes)-1)^(1<<i))  < min_cost) min_cost = dp(i, ((1<<nodes)-1)^(1<<i)), start = i;
+extern "C" {
+    EMSCRIPTEN_KEEPALIVE
+    string * find_best(vector<vector<int>> &A){
+        nodes = A.size();
+        for (int i = 0; i < nodes; ++i) for (int j = 0; j < nodes; ++j) adj_matrix[i][j] = A[i][j] == -1 ? INF : A[i][j];
+        memset(dp_table, -1, sizeof(dp_table));
+        int min_cost = INF;
+        int start = -1;
+        for (int i = 0; i < 1; ++i) {
+            if (dp(i, ((1<<nodes)-1)^(1<<i))  < min_cost) min_cost = dp(i, ((1<<nodes)-1)^(1<<i)), start = i;
+        }
+        if (min_cost == INF){
+            static string answer_path = "NO EXISTE CAMINO";
+            return &answer_path;
+        }
+        string answer_path; answer_path += start+'A';
+        recovery(start, ((1<<nodes)-1)^(1<<start),  min_cost, answer_path);
+        static string final_answer = answer_path;
+        return &final_answer;
     }
-    if (min_cost == INF){
-        return "NO EXISTE CAMINO\n";
-    }
-    string answer_path; answer_path += start+'A';
-    recovery(start, ((1<<nodes)-1)^(1<<start),  min_cost, answer_path);
-    return answer_path;
 }
+
 
 int32_t main(){
     int m; cin >> nodes >> m;
@@ -53,6 +64,6 @@ int32_t main(){
         char u, v; cin >> u >> v >> w;
         A[u-'A'][v-'A'] = A[v-'A'][u-'A'] = w;
     }
-    string s = find_best(A);
+    string* s = find_best(A);
     cout << s << "\n";
 }

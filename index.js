@@ -1,3 +1,5 @@
+// import Module from "./graph"
+
 const MARGIN = 10;
 const WIDTH = 640;
 const HEIGHT = 480;
@@ -104,4 +106,20 @@ let buttonClick = () => {
   loadGraph(parsedGraph)
 }
 
-loadGraph(EXAMPLE_GRAPH);
+const makePtrOfGraph = (myModule, graph) => {
+  let node_count = graph["nodes"].length()
+  matrixPtr = myModule._calloc(node_count, 4)
+  for (let i = 0; i < node_count; i++) {
+    let rowPtr = myModule._calloc(node_count, 4)
+    myModule.setValue(rowPtr, -1, "i32")
+    myModule.setValue(matrixPtr + i * 4, rowPtr, "i32")
+  }
+  graph["links"].forEach(link => {
+    source = link["source"]
+    target = link["target"]
+
+  })
+  return matrixPtr
+}
+
+// loadGraph(EXAMPLE_GRAPH);
