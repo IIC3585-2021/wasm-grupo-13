@@ -1,0 +1,19 @@
+.grid-container{
+    width: 75%;
+    align-self: left;
+    margin-left: 20px;
+    display: grid;
+    grid-template-columns: 70px, auto;
+    grid-template-rows: auto;
+    grid-template-areas:
+    "form graph";
+}
+
+.grid-form{
+    grid-area: form;
+}
+
+.grid-graph{
+    grid-area: graph;
+    place-self: left;
+}
