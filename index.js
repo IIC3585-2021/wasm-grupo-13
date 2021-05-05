@@ -59,7 +59,7 @@ let loadGraph = graph => {
       .id(function(d) { return d.id; })
       .links(graph.links)
   )
-  .force("charge", d3.forceManyBody().strength(-1200))
+  .force("charge", d3.forceManyBody().strength(-2000))
   .force("center", d3.forceCenter((WIDTH - 2*MARGIN) / 2, (HEIGHT - 2*MARGIN) / 2))
   .on("end", ticked);
 
